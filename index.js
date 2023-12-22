@@ -1,7 +1,11 @@
 //? Este MÓDULO es el que INICIA la aplicación
 const server = require('./src/server');
+const {sequelize} = require('./src/db'); //* acá importo a la BDD
 const PORT = 3001;
 
 server.listen(PORT, () => {
-  console.log(`Servidor iniciado en el puerto ${PORT}`)
+  sequelize.sync({
+    force: true
+  }); 
+  console.log(`Servidor iniciado en el puerto ${PORT}`);
 })
