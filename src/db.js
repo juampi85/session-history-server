@@ -1,8 +1,8 @@
 //* PASOS PARA CONECTAR LA BDD
 //? crear la conexión con la BDD ---> hecho
 //? definir los modelos ---> hecho
-// relacionarlos
-// exportarlos
+//? relacionarlos --> hecho
+//? exportarlos --> hecho
 
 //* comandos SQL SHELL
 // \l ---> lista las bases de datos;
@@ -11,7 +11,7 @@
 
 //* IMPORTACIONES NECESARIAS
 const { Sequelize } = require('sequelize');
-const UserModel = require('./models/User'); //* importo la función que define al modelo
+const PatientModel = require('./models/Patient'); //* importo la función que define al modelo
 const SessionModel = require('./models/Session'); //* importo la función que define al modelo
 
 require('dotenv').config(); //* acá hago que las variables de entorno estén disponibles
@@ -23,15 +23,14 @@ const sequelize = new Sequelize( //* acá conecté el servidor con la BDD
   { logging: false }
 );
 
-UserModel(sequelize); //* acá ejecuto la función enviándole la instancia de Sequelize que define al modelo
+PatientModel(sequelize); //* acá ejecuto la función enviándole la instancia de Sequelize que define al modelo
 SessionModel(sequelize);
-
 
 // console.log(sequelize.models) // acá controlamos que sequelize haya traido a los MODELOS
 
-const { User, Session } = sequelize.models;
+const { Patient, Session } = sequelize.models;
 
-User.hasMany(Session);
-Session.belongsTo(User);
+Patient.hasMany(Session);
+Session.belongsTo(Patient);
 
-module.exports = { sequelize };
+module.exports = { sequelize, ...sequelize.models }; //* al exportar sequelize.models puedo trabajarlos desde los handlers y controllers
