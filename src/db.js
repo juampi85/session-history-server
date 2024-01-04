@@ -30,7 +30,7 @@ SessionModel(sequelize);
 
 const { Patient, Session } = sequelize.models;
 
-Patient.hasMany(Session);
-Session.belongsTo(Patient);
+Patient.hasMany(Session, { foreignKey: 'patientId' });
+Session.belongsTo(Patient, { foreignKey: 'patientId' });
 
 module.exports = { sequelize, ...sequelize.models }; //* al exportar sequelize.models puedo trabajarlos desde los handlers y controllers
