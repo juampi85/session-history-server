@@ -1,5 +1,6 @@
 const {
   createSession,
+  getAllSessions,
   getAllSessionsByName,
   getAllSessionsByDate,
   getSessionById,
@@ -32,30 +33,34 @@ const createSessionHandler = async (req, res) => {
 };
 
 const getSessionsHandler = async (req, res) => {
-  // const { name, date } = req.query;
+  const { name, date } = req.query;
 
   try {
-    let sessions;
-
-    // if (!name && !date) {
-      // Si no hay parámetros de búsqueda, traer todas las sesiones
-      return sessions = await getAllSessions();
-    // } else if (name && date) {
-    //   return sessions = await getAllSessionsByName(name);
-    // } else if (name) {
-    //   return sessions = await getAllSessionsByName(name);
-    // } else if (date) {
-    //   return sessions = await getAllSessionsByDate(date);
-    // }
-
-    // if (sessions.length === 0) {
-    //   return res.status(404).json({ error: 'No hay sesiones cargadas' });
-    // }
-
-    return res.status(200).json({ sessions });
+    if (name && date) {
+      const sessions = await getAllSessionsByName(name);
+      return res.status(200).json({ sessions });
+    } else if (name) {
+      const sessions = await getAllSessionsByName(name);
+      return res.status(200).json({ sessions });
+    } else if (date) {
+      const sessions = await getAllSessionsByDate(date);
+      return res.status(200).json({ sessions });
+    } else {
+      const sessions = await getAllSessions();
+      return res.status(200).json({ sessions });
+    }
   } catch (error) {
-    console.error(error);
-    return res.status(404).json({ error: 'Error al recuperar sesiones' });
+    if (name) {
+      return res
+        .status(404)
+        .json({ error: 'No existen sesiones asociadas a ese paciente' });
+    } else if (date) {
+      return res
+        .status(404)
+        .json({ error: 'No existen sesiones en esa fecha' });
+    } else {
+      return res.status(404).json({ error: 'No hay sesiones cargadas' });
+    }
   }
 };
 
